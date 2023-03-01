@@ -1,0 +1,13 @@
+﻿global using Xunit;
+global using WebApplicationFactory_ISystemClock.Tests.Integration;
+global using System.Collections.Concurrent;
+global using Microsoft.AspNetCore.Mvc.Testing;
+global using Microsoft.AspNetCore.Authentication;
+global using Microsoft.AspNetCore.Hosting;
+global using Microsoft.AspNetCore.TestHost;
+global using Moq;
+global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.AspNetCore.Http;
+global using WebApplicationFactory_ISystemClock.Models;
+global using FluentAssertions;
+global using System.Net.Http.Json;

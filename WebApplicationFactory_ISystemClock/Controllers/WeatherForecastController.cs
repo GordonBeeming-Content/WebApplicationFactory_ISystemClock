@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace WebApplicationFactory_ISystemClock.Controllers;
+﻿namespace WebApplicationFactory_ISystemClock.Controllers;
 
 [ApiController]
 [Route("[controller]")]
@@ -21,12 +19,33 @@ public class WeatherForecastController : ControllerBase
   [HttpGet(Name = "GetWeatherForecast")]
   public IEnumerable<WeatherForecast> Get()
   {
-    return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+    var daysToNextSunday = GetDaysUntilNextSunday();
+    return Enumerable.Range(1, daysToNextSunday).Select(index => new WeatherForecast
     {
-      Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+      Date = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(index)),
       TemperatureC = Random.Shared.Next(-20, 55),
       Summary = _summaries[Random.Shared.Next(_summaries.Length)]
     })
     .ToArray();
+  }
+
+  private int GetDaysUntilNextSunday()
+  {
+    var daysToNextSunday = 0;
+    var pastASunday = false;
+    while (true)
+    {
+      daysToNextSunday++;
+      if (DateTime.UtcNow.AddDays(daysToNextSunday).DayOfWeek == DayOfWeek.Sunday)
+      {
+        if (pastASunday)
+        {
+          break;
+        }
+        pastASunday = true;
+      }
+    }
+
+    return daysToNextSunday;
   }
 }

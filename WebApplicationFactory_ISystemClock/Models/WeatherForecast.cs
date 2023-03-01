@@ -1,4 +1,4 @@
-namespace WebApplicationFactory_ISystemClock
+namespace WebApplicationFactory_ISystemClock.Models
 {
   public class WeatherForecast
   {
