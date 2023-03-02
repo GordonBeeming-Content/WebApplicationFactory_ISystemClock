@@ -1,4 +1,7 @@
-﻿namespace WebApplicationFactory_ISystemClock.Tests.Integration.WeatherForecastController;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Net.Http;
+
+namespace WebApplicationFactory_ISystemClock.Tests.Integration.WeatherForecastController;
 
 [Collection(ApiCollection.Definition)]
 public sealed class GetWeatherForecastTests
@@ -16,6 +19,11 @@ public sealed class GetWeatherForecastTests
     // Assert
     var httpClient = _factory.CreateClient();
     var expectedRecords = 11;
+
+    var timeKey = Guid.NewGuid().ToString();
+    var time = new DateTimeOffset(2023, 3, 1, 9, 0, 0, TimeSpan.Zero);
+    ApiFactory.TestTimes.AddOrUpdate(timeKey, time, (k, v) => time);
+    httpClient.DefaultRequestHeaders.Add("X-Test-Time", timeKey);
 
     // Act
     var response = await httpClient.GetAsync("/WeatherForecast");

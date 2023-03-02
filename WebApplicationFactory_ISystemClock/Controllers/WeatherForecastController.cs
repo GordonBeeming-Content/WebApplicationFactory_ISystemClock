@@ -10,10 +10,12 @@ public class WeatherForecastController : ControllerBase
   };
 
   private readonly ILogger<WeatherForecastController> _logger;
+  private readonly ISystemClock _systemClock;
 
-  public WeatherForecastController(ILogger<WeatherForecastController> logger)
+  public WeatherForecastController(ILogger<WeatherForecastController> logger, ISystemClock systemClock)
   {
     _logger = logger;
+    _systemClock = systemClock;
   }
 
   [HttpGet(Name = "GetWeatherForecast")]
@@ -22,7 +24,7 @@ public class WeatherForecastController : ControllerBase
     var daysToNextSunday = GetDaysUntilNextSunday();
     return Enumerable.Range(1, daysToNextSunday).Select(index => new WeatherForecast
     {
-      Date = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(index)),
+      Date = DateOnly.FromDateTime(_systemClock.UtcNow.AddDays(index).UtcDateTime),
       TemperatureC = Random.Shared.Next(-20, 55),
       Summary = _summaries[Random.Shared.Next(_summaries.Length)]
     })
@@ -36,7 +38,7 @@ public class WeatherForecastController : ControllerBase
     while (true)
     {
       daysToNextSunday++;
-      if (DateTime.UtcNow.AddDays(daysToNextSunday).DayOfWeek == DayOfWeek.Sunday)
+      if (_systemClock.UtcNow.AddDays(daysToNextSunday).DayOfWeek == DayOfWeek.Sunday)
       {
         if (pastASunday)
         {
